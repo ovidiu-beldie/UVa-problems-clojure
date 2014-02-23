@@ -69,7 +69,7 @@
  "CGB", [2 1 0]
 })
 
-(defn count-bin
+(defn- count-bin
   "Counts the nr of moves per bin.
 'bin-pos' the bin's position (from 0 to 2)
 'color-id' the (only) color that the bin should contain (from 0 to 2)
@@ -80,8 +80,11 @@
                            (reduce +))]
     (- sum-all-color (get-in input [bin-pos color-id]))))
 
-(defn count-perm-moves 
-  ""
+(defn- count-perm-moves 
+  "Counts moves for a permutation.
+'input' the initial distribution of bottles in the bins (vec of vecs)
+'code' permutation code (key in 'permutations') 
+'perm' vec describing the distrbution of colors to bins"
   [input [code perm]]
   (let [count (->> perm
                    (map (partial count-bin input) (range 3))
@@ -89,7 +92,7 @@
     [code count]))
 
 (defn- process-input
-  ""
+  "Process input line. Returns a vec of vecs."
   [line]
   (->>(split line #"\s")
       (map #(Long/parseLong %))
@@ -98,7 +101,7 @@
       (vec)))
 
 (defn find-least-moves
-  ""
+  "Main fn of the namespace. Solves the problem for the given imput line."
   [line]
   (let [input (process-input line)
         results (map (partial count-perm-moves input) permutations)
